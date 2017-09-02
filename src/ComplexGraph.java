@@ -15,7 +15,6 @@ public abstract class ComplexGraph {
 		//TODO What are the four numbers for??
 		
 		this.window = window;
-
 	}
 	//internal image bounds
 	public void setComplexSourceRange(double realMin, double realMax,
@@ -30,21 +29,73 @@ public abstract class ComplexGraph {
 				imaginaryMax);
 	}
 
+<<<<<<< HEAD
 	//display bound for original image
 	public void setDisplaySourceRange(double xmin, double ymin, double xmax,
 			double ymax) {
+=======
+	public void setDisplaySourceRange(int xmin, int ymin, int xmax, int ymax) {
+>>>>>>> 95e8b93fedcb9171f0ec3bc89e086fe021a9908e
 		this.preImageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
+
+		if (source == null) {
+			source = new PImage(xmax - xmin, ymax - ymin);
+		} else {
+			source.resize(xmax - xmin, ymax - ymin);
+		}
 	}
+<<<<<<< HEAD
 	//display bound for transformed image
 	public void setDisplayTargetRange(double xmin, double ymin, double xmax,
 			double ymax) {
+=======
+
+	public void setDisplayTargetRange(int xmin, int ymin, int xmax, int ymax) {
+>>>>>>> 95e8b93fedcb9171f0ec3bc89e086fe021a9908e
 		this.imageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
+
+		if (target == null) {
+			target = new PImage(xmax - xmin, ymax - ymin);
+		} else {
+			target.resize(xmax - xmin, ymax - ymin);
+			// TODO: also re-calculate here?
+		}
 	}
 
 	public abstract Complex function(Complex in);
+	public Point function(Point in) {
+		// make complex
+		// run it
+		// return point
+	}
+	
+	public void calculateTargetImage() {
+		if (source == null) {
+			System.err.println("no source image set yet.");
+			return;
+		}
+
+		source.loadPixels(); // TODO: double check that this is correct...
+		for (int i = 0; i < source.pixels.length; i++) {
+			Point p = new Point(i % source.width, i / source.width); // (x, y) coords
+																																// of pixel
+																																// ASSUMING
+																																// (0, 0) is top
+																																// left corner
+		// map from pixel space to complex plane
+			Point p2 = this.mapRegion(this.preImageDisplayBoundary,
+					this.preImageBoundary, p);
+
+			
+			// map from complex plane through function
+			// map from function output to pixel space
+			// if in target region, set pixel color
+		}
+	}
 
 	public void draw() {
-
+		window.image(source, 0, 0); // TODO: add fields for these display locations
+		window.image(target, source.width, 0);
 	}
 	
 	
@@ -115,6 +166,10 @@ public abstract class ComplexGraph {
 			this.xMax = xMax;
 			this.yMin = yMin;
 			this.yMax = yMax;
+		}
+
+		public boolean contains(Point p) {
+			return (p.x >= xMin && p.x <= xMax && p.y <= yMax && p.y >= yMin);
 		}
 	}
 }
