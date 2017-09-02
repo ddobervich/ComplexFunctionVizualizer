@@ -1,5 +1,6 @@
 import org.apache.commons.math3.complex.Complex;
 
+
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -11,27 +12,30 @@ public abstract class ComplexGraph {
 	private PImage source, target;
 
 	public ComplexGraph(double a, double b, double c, double d, PApplet window) {
+		//TODO What are the four numbers for??
+		
 		this.window = window;
 
 	}
-
+	//internal image bounds
 	public void setComplexSourceRange(double realMin, double realMax,
 			double imaginaryMin, double imaginaryMax) {
 		this.preImageBoundary = new Boundary(realMin, imaginaryMin, realMax,
 				imaginaryMax);
 	}
-
+	//internal image bounds after transformation
 	public void setComplexTargetRange(double realMin, double realMax,
 			double imaginaryMin, double imaginaryMax) {
 		this.imageBoundary = new Boundary(realMin, imaginaryMin, realMax,
 				imaginaryMax);
 	}
 
+	//display bound for original image
 	public void setDisplaySourceRange(double xmin, double ymin, double xmax,
 			double ymax) {
 		this.preImageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
 	}
-	
+	//display bound for transformed image
 	public void setDisplayTargetRange(double xmin, double ymin, double xmax,
 			double ymax) {
 		this.imageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
@@ -41,6 +45,28 @@ public abstract class ComplexGraph {
 
 	public void draw() {
 
+	}
+	
+	
+	/***
+	 * Convert a complex number to a (x,y) coordinate
+	 * @param i
+	 * @return A point
+	 */
+	public Point getPointFrom(Complex i){
+		return new Point(i.getReal(),i.getImaginary());
+	}
+	
+	/***
+	 * Convert a coordinate (x,y) to a complex number
+	 * 
+	 * To be used to perform transformations
+	 * 
+	 * @param p
+	 * @return Complex number
+	 */
+	public Complex getComplexFrom(Point p){
+		return new Complex(p.x,p.y);
 	}
 
 	/***
