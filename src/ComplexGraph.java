@@ -67,6 +67,7 @@ public abstract class ComplexGraph {
 		}
 
 		source.loadPixels(); // TODO: double check that this is correct...
+		target.loadPixels();
 		for (int i = 0; i < source.pixels.length; i++) {
 			Point p = new Point(i % source.width, i / source.width); // (x, y) coords
 																																// of pixel
@@ -78,9 +79,20 @@ public abstract class ComplexGraph {
 					this.preImageBoundary, p);
 
 			// map from complex plane through function
+			p2 = function(p2);
+
 			// map from function output to pixel space
+			p2 = this.mapRegion(this.imageBoundary, this.imageDisplayBoundary, p2);
+
 			// if in target region, set pixel color
+			if (this.imageDisplayBoundary.contains(p2)) {
+				int targetIndex = (int) p2.y * this.target.width + (int) p2.x;
+				target.pixels[targetIndex] = source.pixels[i];
+			}
 		}
+
+		target.updatePixels();
+		source.updatePixels();
 	}
 
 	public void draw() {
