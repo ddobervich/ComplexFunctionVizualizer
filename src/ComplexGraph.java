@@ -29,13 +29,7 @@ public abstract class ComplexGraph {
 				imaginaryMax);
 	}
 
-<<<<<<< HEAD
-	//display bound for original image
-	public void setDisplaySourceRange(double xmin, double ymin, double xmax,
-			double ymax) {
-=======
 	public void setDisplaySourceRange(int xmin, int ymin, int xmax, int ymax) {
->>>>>>> 95e8b93fedcb9171f0ec3bc89e086fe021a9908e
 		this.preImageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
 
 		if (source == null) {
@@ -44,14 +38,8 @@ public abstract class ComplexGraph {
 			source.resize(xmax - xmin, ymax - ymin);
 		}
 	}
-<<<<<<< HEAD
-	//display bound for transformed image
-	public void setDisplayTargetRange(double xmin, double ymin, double xmax,
-			double ymax) {
-=======
 
 	public void setDisplayTargetRange(int xmin, int ymin, int xmax, int ymax) {
->>>>>>> 95e8b93fedcb9171f0ec3bc89e086fe021a9908e
 		this.imageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
 
 		if (target == null) {
