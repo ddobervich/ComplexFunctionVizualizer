@@ -9,10 +9,12 @@ public class Main extends PApplet {
 		graph = new Square(this);
 		graph.setComplexSourceRange(-2, 2, -2, 2);
 		graph.setComplexTargetRange(-4, 4, -4, 4);
-		graph.setSourceImage();
+		graph.setSourceImage(loadImage("../assets/graph.png"));
+		graph.calculateTargetImage();
 	}
 
 	public void draw() {
-
+		background(255);
+		graph.draw();
 	}
 }
