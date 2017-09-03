@@ -29,7 +29,7 @@ public abstract class ComplexGraph {
 	}
 
 	public void setDisplaySourceRange(int xmin, int ymin, int xmax, int ymax) {
-		this.preImageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
+		this.preImageDisplayBoundary = new Boundary(xmin, ymin, xmax, ymax);
 
 		if (source == null) {
 			source = new PImage(xmax - xmin, ymax - ymin);
@@ -39,7 +39,7 @@ public abstract class ComplexGraph {
 	}
 
 	public void setDisplayTargetRange(int xmin, int ymin, int xmax, int ymax) {
-		this.imageDisplayBoundary = new Boundary(xmin, xmax, ymin, ymax);
+		this.imageDisplayBoundary = new Boundary(xmin, ymin, xmax, ymax);
 
 		if (target == null) {
 			target = new PImage(xmax - xmin, ymax - ymin);
@@ -85,12 +85,23 @@ public abstract class ComplexGraph {
 			// if in target region, set pixel color
 			if (this.imageDisplayBoundary.contains(p2)) {
 				int targetIndex = (int) p2.y * this.target.width + (int) p2.x;
-				target.pixels[targetIndex] = source.pixels[i];
+				try {
+					target.pixels[targetIndex] = source.pixels[i];
+				} catch (Exception E) {
+					System.out.println("Bad coords: " + p2);
+				}
 			}
 		}
 
 		target.updatePixels();
 		source.updatePixels();
+	}
+
+	public void setSourceImage(PImage inputImage) {
+		this.source = inputImage;
+		this.setDisplaySourceRange(0, 0, source.width, source.height);
+		this.target = new PImage(source.width, source.height);
+		this.setDisplayTargetRange(0, 0, target.width, target.height);
 	}
 
 	public void draw() {
@@ -155,6 +166,10 @@ public abstract class ComplexGraph {
 		public Point(double x, double y) {
 			this.x = x;
 			this.y = y;
+		}
+
+		public String toString() {
+			return "" + x + ", " + y;
 		}
 	}
 
