@@ -10,9 +10,7 @@ public abstract class ComplexGraph {
 	private PApplet window;
 	private PImage source, target;
 
-	public ComplexGraph(double a, double b, double c, double d, PApplet window) {
-		// TODO What are the four numbers for??
-
+	public ComplexGraph(PApplet window) {
 		this.window = window;
 	}
 
