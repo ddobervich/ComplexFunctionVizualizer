@@ -1,6 +1,5 @@
 import org.apache.commons.math3.complex.Complex;
 
-
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -12,17 +11,19 @@ public abstract class ComplexGraph {
 	private PImage source, target;
 
 	public ComplexGraph(double a, double b, double c, double d, PApplet window) {
-		//TODO What are the four numbers for??
-		
+		// TODO What are the four numbers for??
+
 		this.window = window;
 	}
-	//internal image bounds
+
+	// internal image bounds
 	public void setComplexSourceRange(double realMin, double realMax,
 			double imaginaryMin, double imaginaryMax) {
 		this.preImageBoundary = new Boundary(realMin, imaginaryMin, realMax,
 				imaginaryMax);
 	}
-	//internal image bounds after transformation
+
+	// internal image bounds after transformation
 	public void setComplexTargetRange(double realMin, double realMax,
 			double imaginaryMin, double imaginaryMax) {
 		this.imageBoundary = new Boundary(realMin, imaginaryMin, realMax,
@@ -51,12 +52,14 @@ public abstract class ComplexGraph {
 	}
 
 	public abstract Complex function(Complex in);
+
 	public Point function(Point in) {
-		// make complex
-		// run it
-		// return point
+		Complex c = function(new Complex(in.x, in.y));
+		in.x = c.getReal();
+		in.y = c.getImaginary();
+		return in;
 	}
-	
+
 	public void calculateTargetImage() {
 		if (source == null) {
 			System.err.println("no source image set yet.");
@@ -70,11 +73,10 @@ public abstract class ComplexGraph {
 																																// ASSUMING
 																																// (0, 0) is top
 																																// left corner
-		// map from pixel space to complex plane
+			// map from pixel space to complex plane
 			Point p2 = this.mapRegion(this.preImageDisplayBoundary,
 					this.preImageBoundary, p);
 
-			
 			// map from complex plane through function
 			// map from function output to pixel space
 			// if in target region, set pixel color
@@ -85,17 +87,17 @@ public abstract class ComplexGraph {
 		window.image(source, 0, 0); // TODO: add fields for these display locations
 		window.image(target, source.width, 0);
 	}
-	
-	
+
 	/***
 	 * Convert a complex number to a (x,y) coordinate
+	 * 
 	 * @param i
 	 * @return A point
 	 */
-	public Point getPointFrom(Complex i){
-		return new Point(i.getReal(),i.getImaginary());
+	public Point getPointFrom(Complex i) {
+		return new Point(i.getReal(), i.getImaginary());
 	}
-	
+
 	/***
 	 * Convert a coordinate (x,y) to a complex number
 	 * 
@@ -104,8 +106,8 @@ public abstract class ComplexGraph {
 	 * @param p
 	 * @return Complex number
 	 */
-	public Complex getComplexFrom(Point p){
-		return new Complex(p.x,p.y);
+	public Complex getComplexFrom(Point p) {
+		return new Complex(p.x, p.y);
 	}
 
 	/***
