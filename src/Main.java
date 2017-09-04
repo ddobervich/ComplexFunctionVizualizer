@@ -8,7 +8,7 @@ public class Main extends PApplet {
 	public void setup() {
 		size(1200, 600);
 
-		graph = new Exponential(this);
+		graph = new Power(this,-2);
 		graph.setComplexSourceRange(-4, 4, -4, 4);
 		graph.setComplexTargetRange(-4, 4, -4, 4);
 		graph.setSourceImage(loadImage("../assets/graph.png"));
