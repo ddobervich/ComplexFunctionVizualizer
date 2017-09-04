@@ -144,18 +144,9 @@ public abstract class ComplexGraph {
 				mapRange(source.yMin, source.yMax, target.yMin, target.yMax, val.y));
 	}
 
-	public void addLineToGraph(double x1, double y1, double x2, double y2, int thickness, int color) {
-		double m = (y2 - y1) / (x2 - x1);
-		for (double x = x1; x <= x2; x++) {
-			for (double y = y1; y <= y2; y += m) {
-				addSpotToGraph(x, y, thickness, color);
-			}
-		}
-	}
-
 	public void addSpotToGraph(double pixelx, double pixely, int size, int color) {
 		for (double x = pixelx - size / 2; x <= pixelx + size / 2; x++) {
-			for (double y = pixelx - size / 2; y <= pixelx + size / 2; y++) {
+			for (double y = pixely - size / 2; y <= pixely + size / 2; y++) {
 				if (dist(pixelx, pixely, x, y) < size / 2) {
 					addPointToGraph(x, y, color);
 				}
