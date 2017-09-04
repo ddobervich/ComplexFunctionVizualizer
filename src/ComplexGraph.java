@@ -104,6 +104,12 @@ public abstract class ComplexGraph {
 		this.setDisplayTargetRange(0, 0, target.width, target.height);
 	}
 	
+	public void setSourceImageBlank(PImage inputImage) {
+		this.source = inputImage;
+		this.setDisplaySourceRange(0, 0, source.width, source.height);
+		this.target = new PImage(source.width, source.height);
+		this.setDisplayTargetRange(0, 0, target.width, target.height);
+	}
 
 	public void draw() {
 		window.image(source, 0, 0); // TODO: add fields for these display locations
