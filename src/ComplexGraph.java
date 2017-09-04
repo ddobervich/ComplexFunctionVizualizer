@@ -51,7 +51,7 @@ public abstract class ComplexGraph {
 
 	public abstract Complex function(Complex in);
 
-	public Point function(Point in) {
+	public Point function(Point in) { 
 		Complex c = function(new Complex(in.x, in.y));
 		in.x = c.getReal();
 		in.y = c.getImaginary();
@@ -103,33 +103,13 @@ public abstract class ComplexGraph {
 		this.target = new PImage(source.width, source.height);
 		this.setDisplayTargetRange(0, 0, target.width, target.height);
 	}
+	
 
 	public void draw() {
 		window.image(source, 0, 0); // TODO: add fields for these display locations
 		window.image(target, source.width, 0);
 	}
 
-	/***
-	 * Convert a complex number to a (x,y) coordinate
-	 * 
-	 * @param i
-	 * @return A point
-	 */
-	public Point getPointFrom(Complex i) {
-		return new Point(i.getReal(), i.getImaginary());
-	}
-
-	/***
-	 * Convert a coordinate (x,y) to a complex number
-	 * 
-	 * To be used to perform transformations
-	 * 
-	 * @param p
-	 * @return Complex number
-	 */
-	public Complex getComplexFrom(Point p) {
-		return new Complex(p.x, p.y);
-	}
 
 	/***
 	 * Maps val in range [inMin, inMax] to a value in [outMin, outMax]
@@ -173,6 +153,7 @@ public abstract class ComplexGraph {
 
 		// Add point at source image
 		// TODO: sort out this casting to int stuff
+		//TODO: why? I don't see the problem...
 		int sourceIndex = (int) (pixely * source.width + pixelx);
 		source.pixels[sourceIndex] = color;
 		
