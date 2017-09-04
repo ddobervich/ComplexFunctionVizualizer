@@ -33,4 +33,8 @@ public class Main extends PApplet {
 			graph.addPointToGraph(mouseX - 1, mouseY - 1, color(255, 0, 0));
 		}
 	}
+	
+	public void updateGraph(){
+		graph.calculateTargetImage();
+	}
 }

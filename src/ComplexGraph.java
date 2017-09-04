@@ -35,6 +35,7 @@ public abstract class ComplexGraph {
 			source = new PImage(xmax - xmin, ymax - ymin);
 		} else {
 			source.resize(xmax - xmin, ymax - ymin);
+			((Main) window).updateGraph(); //TODO is this a strange way to do it??
 		}
 	}
 
@@ -45,7 +46,7 @@ public abstract class ComplexGraph {
 			target = new PImage(xmax - xmin, ymax - ymin);
 		} else {
 			target.resize(xmax - xmin, ymax - ymin);
-			// TODO: also re-calculate here?
+			((Main) window).updateGraph();
 		}
 	}
 
@@ -64,7 +65,7 @@ public abstract class ComplexGraph {
 			return;
 		}
 
-		source.loadPixels(); // TODO: double check that this is correct...
+		source.loadPixels();
 		target.loadPixels();
 		for (int i = 0; i < source.pixels.length; i++) {
 			Point p = new Point(i % source.width, i / source.width); // (x, y) coords
