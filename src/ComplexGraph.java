@@ -160,6 +160,47 @@ public abstract class ComplexGraph {
 				mapRange(source.yMin, source.yMax, target.yMin, target.yMax, val.y));
 	}
 
+	public void addPointToGraph(double pixelx, double pixely, int color) {
+		if (source == null) {
+			System.err.println("no source image set yet.");
+			return;
+		}
+		
+		Point p = new Point(pixelx, pixely);
+	
+		source.loadPixels();
+		target.loadPixels();
+
+		// Add point at source image
+		// TODO: sort out this casting to int stuff
+		int sourceIndex = (int) (pixely * source.width + pixelx);
+		source.pixels[sourceIndex] = color;
+		
+		// map from pixel space to complex plane
+		Point p2 = this.mapRegion(this.preImageDisplayBoundary,
+				this.preImageBoundary, p);
+
+		// map from complex plane through function
+		p2 = function(p2);
+
+		// map from function output to pixel space
+		p2 = this.mapRegion(this.imageBoundary, this.imageDisplayBoundary, p2);
+
+		// if in target region, set pixel color
+		if (this.imageDisplayBoundary.contains(p2)) {
+			int targetIndex = (int) p2.y * this.target.width + (int) p2.x;
+			try {
+				target.pixels[targetIndex] = color;
+			} catch (Exception E) {
+				System.out.println("Bad coords: " + p2);
+			}
+
+		}
+
+		target.updatePixels();
+		source.updatePixels();
+	}
+
 	private class Point {
 		private double x, y;
 
