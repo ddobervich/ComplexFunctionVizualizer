@@ -4,8 +4,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public abstract class ComplexGraph {
-	private Boundary preImageBoundary, imageBoundary, preImageDisplayBoundary,
-			imageDisplayBoundary;
+	private Boundary preImageBoundary, imageBoundary, preImageDisplayBoundary, imageDisplayBoundary;
 
 	private PApplet window;
 	private PImage source, target;
@@ -15,17 +14,13 @@ public abstract class ComplexGraph {
 	}
 
 	// internal image bounds
-	public void setComplexSourceRange(double realMin, double realMax,
-			double imaginaryMin, double imaginaryMax) {
-		this.preImageBoundary = new Boundary(realMin, imaginaryMin, realMax,
-				imaginaryMax);
+	public void setComplexSourceRange(double realMin, double realMax, double imaginaryMin, double imaginaryMax) {
+		this.preImageBoundary = new Boundary(realMin, imaginaryMin, realMax, imaginaryMax);
 	}
 
 	// internal image bounds after transformation
-	public void setComplexTargetRange(double realMin, double realMax,
-			double imaginaryMin, double imaginaryMax) {
-		this.imageBoundary = new Boundary(realMin, imaginaryMin, realMax,
-				imaginaryMax);
+	public void setComplexTargetRange(double realMin, double realMax, double imaginaryMin, double imaginaryMax) {
+		this.imageBoundary = new Boundary(realMin, imaginaryMin, realMax, imaginaryMax);
 	}
 
 	public void setDisplaySourceRange(int xmin, int ymin, int xmax, int ymax) {
@@ -35,7 +30,7 @@ public abstract class ComplexGraph {
 			source = new PImage(xmax - xmin, ymax - ymin);
 		} else {
 			source.resize(xmax - xmin, ymax - ymin);
-			((Main) window).updateGraph(); //TODO is this a strange way to do it??
+			// TODO redraw here?
 		}
 	}
 
@@ -46,13 +41,12 @@ public abstract class ComplexGraph {
 			target = new PImage(xmax - xmin, ymax - ymin);
 		} else {
 			target.resize(xmax - xmin, ymax - ymin);
-			((Main) window).updateGraph();
 		}
 	}
 
 	public abstract Complex function(Complex in);
 
-	public Point function(Point in) { 
+	public Point function(Point in) {
 		Complex c = function(new Complex(in.x, in.y));
 		in.x = c.getReal();
 		in.y = c.getImaginary();
@@ -68,14 +62,18 @@ public abstract class ComplexGraph {
 		source.loadPixels();
 		target.loadPixels();
 		for (int i = 0; i < source.pixels.length; i++) {
-			Point p = new Point(i % source.width, i / source.width); // (x, y) coords
-																																// of pixel
-																																// ASSUMING
-																																// (0, 0) is top
-																																// left corner
+			Point p = new Point(i % source.width, i / source.width); // (x, y)
+																		// coords
+																		// of
+																		// pixel
+																		// ASSUMING
+																		// (0,
+																		// 0) is
+																		// top
+																		// left
+																		// corner
 			// map from pixel space to complex plane
-			Point p2 = this.mapRegion(this.preImageDisplayBoundary,
-					this.preImageBoundary, p);
+			Point p2 = this.mapRegion(this.preImageDisplayBoundary, this.preImageBoundary, p);
 
 			// map from complex plane through function
 			p2 = function(p2);
@@ -104,19 +102,20 @@ public abstract class ComplexGraph {
 		this.target = new PImage(source.width, source.height);
 		this.setDisplayTargetRange(0, 0, target.width, target.height);
 	}
-	
-	public void setSourceImageBlank(int width,int height) {
-		this.source = new PImage(width, height);;
+
+	public void setSourceImageBlank(int width, int height) {
+		this.source = new PImage(width, height);
+		;
 		this.setDisplaySourceRange(0, 0, width, height);
 		this.target = new PImage(width, height);
-		this.setDisplayTargetRange(0, 0,width, height);
+		this.setDisplayTargetRange(0, 0, width, height);
 	}
 
 	public void draw() {
-		window.image(source, 0, 0); // TODO: add fields for these display locations
+		window.image(source, 0, 0); // TODO: add fields for these display
+									// locations
 		window.image(target, source.width, 0);
 	}
-
 
 	/***
 	 * Maps val in range [inMin, inMax] to a value in [outMin, outMax]
@@ -128,8 +127,7 @@ public abstract class ComplexGraph {
 	 * @param val
 	 * @return
 	 */
-	private double mapRange(double inMin, double inMax, double outMin,
-			double outMax, double val) {
+	private double mapRange(double inMin, double inMax, double outMin, double outMax, double val) {
 		return ((val - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
 	}
 
@@ -142,9 +140,31 @@ public abstract class ComplexGraph {
 	 * @return
 	 */
 	private Point mapRegion(Boundary source, Boundary target, Point val) {
-		return new Point(
-				mapRange(source.xMin, source.xMax, target.xMin, target.xMax, val.x),
+		return new Point(mapRange(source.xMin, source.xMax, target.xMin, target.xMax, val.x),
 				mapRange(source.yMin, source.yMax, target.yMin, target.yMax, val.y));
+	}
+
+	public void addLineToGraph(double x1, double y1, double x2, double y2, int thickness, int color) {
+		double m = (y2 - y1) / (x2 - x1);
+		for (double x = x1; x <= x2; x++) {
+			for (double y = y1; y <= y2; y += m) {
+				addSpotToGraph(x, y, thickness, color);
+			}
+		}
+	}
+
+	public void addSpotToGraph(double pixelx, double pixely, int size, int color) {
+		for (double x = pixelx - size / 2; x <= pixelx + size / 2; x++) {
+			for (double y = pixelx - size / 2; y <= pixelx + size / 2; y++) {
+				if (dist(pixelx, pixely, x, y) < size / 2) {
+					addPointToGraph(x, y, color);
+				}
+			}
+		}
+	}
+
+	public double dist(double x1, double y1, double x2, double y2) {
+		return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 	}
 
 	public void addPointToGraph(double pixelx, double pixely, int color) {
@@ -152,21 +172,20 @@ public abstract class ComplexGraph {
 			System.err.println("no source image set yet.");
 			return;
 		}
-		
+
 		Point p = new Point(pixelx, pixely);
-	
+
 		source.loadPixels();
 		target.loadPixels();
 
 		// Add point at source image
 		// TODO: sort out this casting to int stuff
-		//TODO: why? I don't see the problem...
+		// TODO: why? I don't see the problem...
 		int sourceIndex = (int) (pixely * source.width + pixelx);
 		source.pixels[sourceIndex] = color;
-		
+
 		// map from pixel space to complex plane
-		Point p2 = this.mapRegion(this.preImageDisplayBoundary,
-				this.preImageBoundary, p);
+		Point p2 = this.mapRegion(this.preImageDisplayBoundary, this.preImageBoundary, p);
 
 		// map from complex plane through function
 		p2 = function(p2);
